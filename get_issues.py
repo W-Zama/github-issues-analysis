@@ -1,16 +1,36 @@
 import requests
 import json
+import os
+from dotenv import load_dotenv
 
-owner = 'facebook'
-repo = 'react'
+# load .env content
+load_dotenv()
+owner = os.getenv('OWNER')
+repo = os.getenv('REPO')
+bug_label = os.getenv('BUG_LABEL')
+access_token = os.getenv('ACCESS_TOKEN')
 
-url = f'https://api.github.com/repos/{owner}/{repo}/issues?labels=type: bug'
+# set url, headers and params
+url = f'https://api.github.com/repos/{owner}/{repo}/issues?labels={bug_label}&per_page=100'
+headers = {
+    'Authorization': f'token {access_token}',
+}
+params = {
+    'labels': bug_label,
+    'per_page': 100,
+}
 
-response = requests.get(url)
+# get issues via github api
+response = requests.get(url, headers=headers, params=params)
 
-with open('./response.txt', mode='w') as f:
+# print(response.request.url)
+# print(response.headers.get('x-ratelimit-limit'))
+# print(response.headers.get('x-ratelimit-remaining'))
+# print(response.headers.get('x-ratelimit-reset'))
+
+with open('./output/response.txt', mode='w') as f:
     if response.status_code == 200:
-        print('ok')
+        print('OK')
         json_string = response.text
         json_data = json.loads(json_string)
         pretty_json_string = json.dumps(json_data, indent=4)
