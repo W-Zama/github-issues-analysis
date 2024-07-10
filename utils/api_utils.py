@@ -17,8 +17,8 @@ def get_issues():
     per_page = 100        # this is max value
     response_json_list = []
 
-    # while True:
-    for i in range(1):      # for debug
+    while True:
+    # for i in range(1):      # for debug
         print(
             f'Now getting {page} page issues... (Each page contains {per_page} issues.)')
         # set url, headers and params
@@ -54,8 +54,7 @@ def get_issues():
     print(f'x-ratelimit-reset: {datetime.datetime.fromtimestamp(int(response.headers.get("x-ratelimit-reset")))}')
 
     # write json to file
-    jst_now = datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S+09:00')   # current time in JST
-    with open(f'./output/response_{owner}_{repo}_{jst_now}.json', mode='w') as f:
+    with open(f'./output/response_{owner}_{repo}.json', mode='w') as f:
         pretty_json_string = json.dumps(response_json_list, indent=4)
         f.write(pretty_json_string)
 
