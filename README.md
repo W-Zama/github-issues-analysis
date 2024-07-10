@@ -34,7 +34,7 @@ BUG_LABEL=Type: bug
 
 ### 実行
 
-`./main.py`内の`main()`の引数にレポジトリの config のパスを文字列で指定してください（例: `'./.config/react.env'`）．
+`main.py`内の`main()`の引数にレポジトリの config のパスを文字列で指定してください（例: `'./.config/react.env'`）．
 
 ### 結果
 
