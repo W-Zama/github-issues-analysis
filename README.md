@@ -6,7 +6,7 @@ github REST API を用いて，issues からバグの発見時間などの情報
 
 ### `.env`の設定
 
-アクセストークンを使用して，github API の使用制限を緩和医したい場合は，`.config/`内に，`.env`を作成し，`ACCESS_TOKEN`を指定してください．
+アクセストークンを使用して，github API の使用制限を緩和したい場合は，`.config/`内に，`.env`を作成し，`ACCESS_TOKEN`を指定してください．
 
 #### 例
 
