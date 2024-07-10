@@ -1,33 +1,38 @@
 import requests
 import json
-import os
-from dotenv import load_dotenv
 import datetime
+import os
+
+
+def print_github_api_limit(response):
+    print('### Github API limit information ###')
+    print(f'x-ratelimit-limit: {response.headers.get("x-ratelimit-limit")}')
+    print(
+        f'x-ratelimit-remaining: {response.headers.get("x-ratelimit-remaining")}')
+    print(
+        f'x-ratelimit-reset: {datetime.datetime.fromtimestamp(int(response.headers.get("x-ratelimit-reset")))}')
+
 
 def get_issues():
-    # load .env content
-    load_dotenv()
-    owner = os.getenv('OWNER')
-    repo = os.getenv('REPO')
-    bug_label = os.getenv('BUG_LABEL')
-    access_token = os.getenv('ACCESS_TOKEN')
-
     # set page information
     page = 1
     per_page = 100        # this is max value
     response_json_list = []
 
-    while True:
+    # set url
+    url = f'https://api.github.com/repos/{os.getenv("owner")}/{os.getenv("repo")}/issues'
+    print(f'Now accessing to {url}')
+
     # for i in range(1):      # for debug
+    while True:
         print(
             f'Now getting {page} page issues... (Each page contains {per_page} issues.)')
         # set url, headers and params
-        url = f'https://api.github.com/repos/{owner}/{repo}/issues?labels={bug_label}&per_page=100'
         headers = {
-            'Authorization': f'token {access_token}',
+            'Authorization': f'token {os.getenv("access_token")}',
         }
         params = {
-            'labels': bug_label,
+            'labels': os.getenv('bug_label'),
             'page': page,
             'per_page': per_page,
             'state': 'all'
@@ -47,14 +52,14 @@ def get_issues():
             break
 
     # show github api limit information
-    print('### Github API limit information ###')
-    print(f'x-ratelimit-limit: {response.headers.get("x-ratelimit-limit")}')
-    print(
-        f'x-ratelimit-remaining: {response.headers.get("x-ratelimit-remaining")}')
-    print(f'x-ratelimit-reset: {datetime.datetime.fromtimestamp(int(response.headers.get("x-ratelimit-reset")))}')
+    print_github_api_limit(response)
 
     # write json to file
-    with open(f'./output/response_{owner}_{repo}.json', mode='w') as f:
+    output_dir = f'./output/{os.getenv("owner")}_{os.getenv("repo")}'
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    with open(f'{output_dir}/response.json', mode='w') as f:
         pretty_json_string = json.dumps(response_json_list, indent=4)
         f.write(pretty_json_string)
 
